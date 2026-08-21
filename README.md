@@ -1,148 +1,113 @@
-###### \# 🕐 STM32 Perpetual Calendar with Temperature/Humidity Monitoring \& Alarm
+# 🕐 STM32 Perpetual Calendar with Environmental Monitoring & Alarm
 
-###### 
+## 📖 System Description
 
-###### A perpetual calendar and clock system built on STM32F103C8T6, featuring real-time clock keeping, environmental monitoring, an overheat warning system, and a configurable alarm — developed as a university embedded systems capstone project (DAMH1).
+This project presents an embedded **perpetual calendar and clock system** built on an **STM32F103C8T6 (Blue Pill)** microcontroller.
 
-###### 
+The system keeps accurate real-time date and time using a **DS1307 RTC** module (battery-backed), while continuously monitoring ambient **temperature and humidity** through a **DHT11** sensor. All information is displayed on a **20x4 I2C LCD**, including the current date, time, temperature, humidity, and alarm status.
 
-###### \## 📖 Overview
+Users can configure the time, date, and a daily alarm directly through a **4-button interface** (ON/OFF, MODE, UP, DOWN), with press-and-hold support for fast value adjustment. The system also includes an **overheat protection feature**, automatically triggering a visual and audio warning when temperature exceeds a safe threshold, and a **configurable alarm** with automatic buzzer shutoff.
 
-###### 
+Designed as a university embedded systems capstone project, this solution demonstrates practical application of **I2C communication**, **non-blocking timing with millis()**, **state-machine-based UI navigation**, and **modular firmware architecture**.
 
-###### The device displays real-time date, time, temperature, and humidity on a 20x4 I2C LCD. Time is kept accurate using a DS1307 RTC module (battery-backed), with the year stored separately in RTC NVRAM to work around a known register limitation. Users navigate settings (time, date, alarm) via push buttons, and the system triggers visual/audio warnings when ambient temperature exceeds a safe threshold.
+---
 
-###### 
+## 🏗️ System Architecture Diagram
 
-###### \## ✨ Features
+<p align="center">
+  <!-- TODO: chèn ảnh sơ đồ khối / kiến trúc hệ thống (RTC - MCU - LCD - Sensor - Buttons) -->
+</p>
 
-###### 
+---
 
-###### \- \*\*Real-time clock\*\* — DS1307 RTC with I2C, time kept between power cycles via battery backup
+## 🔁 Operation Flowchart
 
-###### \- \*\*Temperature \& humidity monitoring\*\* — DHT11 sensor, polled every 10 seconds
+<p align="center">
+  <!-- TODO: chèn ảnh lưu đồ thuật toán (flowchart) từ báo cáo -->
+</p>
 
-###### \- \*\*Overheat protection\*\* — automatic warning screen + buzzer when temperature exceeds 45°C
+---
 
-###### \- \*\*Configurable alarm\*\* — set hour/minute, auto-off after 30 seconds, interruptible by any button press
+## 🔧 Hardware Setup
 
-###### \- \*\*4-button interface\*\* — ON/OFF, MODE (cycle settings), UP, DOWN (with press-and-hold auto-repeat for fast adjustment)
+<p align="center">
+  <!-- TODO: chèn ảnh mạch thực tế / breadboard / PCB của board chính -->
+</p>
 
-###### \- \*\*20x4 I2C LCD display\*\* — date, time, temperature, humidity, and alarm status shown simultaneously
+---
 
-###### 
+## 🖥️ Display in Operation
 
-###### \## 🔧 Hardware
+<p align="center">
+  <!-- TODO: chèn ảnh màn hình LCD lúc hiển thị ngày giờ / chế độ chỉnh alarm -->
+</p>
 
-###### 
+---
 
-###### | Component | Purpose |
+## ✨ Key Features
 
-###### |---|---|
+- ⏰ Real-time clock keeping via DS1307 (I2C), with battery backup across power loss
+- 🌡️ Temperature & humidity monitoring via DHT11, polled every 10 seconds
+- 🔥 Overheat protection — automatic warning screen + buzzer above 45°C
+- 🔔 Configurable alarm — set hour/minute, auto-off after 30 seconds
+- 🎛️ 4-button interface with press-and-hold auto-repeat for fast setting adjustment
+- 📟 20x4 I2C LCD showing date, time, temperature, humidity, and alarm status simultaneously
 
-###### | STM32F103C8T6 (Blue Pill) | Main MCU |
+---
 
-###### | DS1307 | Real-time clock (I2C) |
+## 🧩 Hardware Components
 
-###### | DHT11 | Temperature \& humidity sensor |
+| Component | Purpose |
+|---|---|
+| STM32F103C8T6 (Blue Pill) | Main MCU |
+| DS1307 | Real-time clock (I2C) |
+| DHT11 | Temperature & humidity sensor |
+| LCD 20x4 (I2C, PCF8574 backpack) | Display |
+| 4x push buttons | ON/OFF, MODE, UP, DOWN |
+| Buzzer | Alarm & overheat alert |
+| LEDs | Overheat indicator, alarm indicator |
 
-###### | LCD 20x4 (I2C, PCF8574 backpack) | Display |
+---
 
-###### | 4x push buttons | ON/OFF, MODE, UP, DOWN |
+## 🗂️ Firmware Structure
 
-###### | Buzzer | Alarm \& overheat alert |
+The firmware is organized into functional modules rather than a single monolithic sketch:
 
-###### | LEDs | Overheat indicator, alarm indicator |
+```
+source_code/DAMH1/
+├── DAMH1.ino             # setup() and loop() only
+├── globals.h/.cpp        # shared state, hardware objects, pin definitions
+├── rtc_module.h/.cpp     # DS1307 read/write, NVRAM year workaround
+├── lcd_display.h/.cpp    # all LCD rendering (main, boot, overheat screens)
+├── alarm_module.h/.cpp   # alarm trigger logic and beep pattern
+└── button_handler.h/.cpp # button reading, debounce, hold-to-repeat
+```
 
-###### 
+**Libraries used:** `Wire`, `LiquidCrystal_I2C`, `SimpleDHT`, `RTClib`
 
-###### \## 🏗️ System Architecture
+---
 
-###### 
+## 🧠 Key Implementation Details
 
-###### ```
+- **Year storage workaround:** the DS1307's native year register is unreliable on some clone modules, so the year is instead written to and read from the DS1307's onboard NVRAM.
+- **Non-blocking timing:** all timers (clock tick, blink, DHT polling, button hold/repeat) use `millis()` instead of `delay()`, keeping the UI responsive while the buzzer, alarm, and sensor polling run concurrently.
+- **Press-and-hold auto-repeat:** holding UP/DOWN past 600ms triggers repeated increments every 150ms.
+- **State machine navigation:** a single `mode` variable (0–9) drives which field is being edited and centralizes button handling logic.
 
-###### \[DS1307 RTC] --I2C--> \[STM32F103C8T6] --I2C--> \[LCD 20x4]
+---
 
-###### \[DHT11]       --GPIO-->      |
+## 📁 Repository Structure
 
-###### \[Buttons]     --GPIO-->      |
-
-###### &#x20;                             +--GPIO--> \[Buzzer, LEDs]
-
-###### ```
-
-###### 
-
-###### \## 🗂️ Software Structure
-
-###### 
-
-###### The firmware is organized into functional modules rather than a single monolithic sketch:
-
-###### 
-
-###### ```
-
-###### source\_code/DAMH1/
-
-###### ├── DAMH1.ino            # setup() and loop() only
-
-###### ├── globals.h/.cpp       # shared state, hardware objects, pin definitions
-
-###### ├── rtc\_module.h/.cpp    # DS1307 read/write, NVRAM year workaround
-
-###### ├── lcd\_display.h/.cpp   # all LCD rendering (main screen, boot screen, overheat screen)
-
-###### ├── alarm\_module.h/.cpp  # alarm trigger logic and beep pattern
-
-###### └── button\_handler.h/.cpp # button reading, debounce, hold-to-repeat, mode actions
-
-###### ```
-
-###### 
-
-###### \*\*Libraries used:\*\* `Wire`, `LiquidCrystal\_I2C`, `SimpleDHT`, `RTClib`
-
-###### 
-
-###### \## 🧠 Key Implementation Details
-
-###### 
-
-###### \- \*\*Year storage workaround:\*\* the DS1307's native year register is unreliable on some clone modules, so the year is instead written to and read from the DS1307's onboard NVRAM.
-
-###### \- \*\*Non-blocking timing:\*\* all timers (clock tick, blink, DHT polling, button hold/repeat) use `millis()` comparisons instead of `delay()`, so the UI stays responsive while the buzzer, alarm, and sensor polling run concurrently.
-
-###### \- \*\*Press-and-hold auto-repeat:\*\* holding UP/DOWN past 600ms triggers repeated increments every 150ms, so setting values like year doesn't require dozens of individual presses.
-
-###### \- \*\*State machine navigation:\*\* a single `mode` variable (0–9) drives which field is being edited (time, date, alarm) and which LCD blink target is active, keeping button handling logic centralized.
-
-###### 
-
-###### \## 📁 Repository Structure
-
-###### 
-
-###### ```
-
-###### ├── source\_code/     # STM32 firmware (Arduino framework)
-
-###### ├── proteus/          # Proteus simulation files
-
-###### ├── wokwi/             # Wokwi simulation files
-
-###### ├── report/            # Full defense report (Vietnamese)
-
-###### └── images/            # Circuit photos, demo screenshots
-
-###### ```
-
-###### 
-
-###### \## 👤 Author
-
-###### 
-
-###### Third-year Telecommunications Engineering student, Ho Chi Minh City University of Technology and Education (HCMUTE).
-
+```
+├── source_code/   # STM32 firmware (Arduino framework)
+├── proteus/        # Proteus simulation files
+├── wokwi/           # Wokwi simulation files
+├── report/          # Full defense report (Vietnamese)
+└── images/          # Circuit photos, demo screenshots
+```
+
+---
+
+## 👤 Author
+
+Third-year Telecommunications Engineering student, Ho Chi Minh City University of Technology and Education (HCMUTE).
