@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "author": "Uter Games",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-stm32-bluepill", "id": "stm32", "top": -20.56, "left": -3.63, "attrs": {} },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 153.6,
+      "left": 105.8,
+      "rotate": 180,
+      "attrs": { "color": "green", "label": "SW1", "bounce": "0" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn2",
+      "top": 153.6,
+      "left": 182.6,
+      "rotate": 180,
+      "attrs": { "color": "green", "label": "SW2", "bounce": "0" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 32.2,
+      "left": -77.65,
+      "rotate": 270,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-ds1307",
+      "id": "rtc1",
+      "top": 206.5,
+      "left": -79.6,
+      "rotate": 90,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-lcd2004",
+      "id": "lcd1",
+      "top": -262.4,
+      "left": -80.8,
+      "attrs": { "pins": "i2c" }
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": -66.9,
+      "left": -197.4,
+      "attrs": { "humidity": "51.5", "temperature": "59.9" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn3",
+      "top": 169.4,
+      "left": 259.2,
+      "attrs": { "color": "green", "xray": "1" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn4",
+      "top": 169.4,
+      "left": 336,
+      "attrs": { "color": "green", "xray": "1" }
+    },
+    { "type": "wokwi-led", "id": "led1", "top": -90, "left": -53.8, "attrs": { "color": "red" } },
+    {
+      "type": "wokwi-text",
+      "id": "text1",
+      "top": 211.2,
+      "left": 192,
+      "attrs": { "text": "MODE\n" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text2",
+      "top": 211.2,
+      "left": 268.8,
+      "attrs": { "text": "DOWN\n" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text3",
+      "top": 211.2,
+      "left": 355.2,
+      "attrs": { "text": "UP\n" }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "bz1",
+      "top": -2.7,
+      "left": 129.3,
+      "rotate": 90,
+      "attrs": { "volume": "0.1" }
+    },
+    { "type": "wokwi-led", "id": "led3", "top": -99.6, "left": 311, "attrs": { "color": "cyan" } },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": -24,
+      "left": 306.65,
+      "rotate": 90,
+      "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text4",
+      "top": 211.2,
+      "left": 115.2,
+      "attrs": { "text": "ON/OFF\n" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text5",
+      "top": -76.8,
+      "left": -19.2,
+      "attrs": { "text": "led_hot\n" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text6",
+      "top": -124.8,
+      "left": 307.2,
+      "attrs": { "text": "LED_ALARM" }
+    }
+  ],
+  "connections": [
+    [ "stm32:A9", "$serialMonitor:RX", "green", [] ],
+    [ "stm32:A10", "$serialMonitor:TX", "green", [] ],
+    [ "stm32:A0", "btn1:1.l", "green", [] ],
+    [ "stm32:GND.1", "btn1:2.r", "black", [] ],
+    [ "stm32:A1", "btn2:1.l", "blue", [] ],
+    [ "stm32:GND.1", "btn2:2.r", "black", [] ],
+    [ "lcd1:SCL", "stm32:B6", "green", [ "h-19.2", "v317.1" ] ],
+    [ "stm32:B7", "lcd1:SDA", "green", [ "h-124.8", "v-259.2", "h0", "v-86.4" ] ],
+    [ "lcd1:GND", "stm32:GND.2", "black", [ "h-28.8", "v0", "h393.6", "v76.8" ] ],
+    [ "lcd1:VCC", "stm32:3V3.2", "red", [ "h-9.6", "v-47.9", "h364.8", "v9.6" ] ],
+    [ "rtc1:SDA", "stm32:B7", "green", [ "v-84.2", "h-5.7" ] ],
+    [ "rtc1:SCL", "stm32:B6", "green", [ "v0" ] ],
+    [ "rtc1:5V", "stm32:5V.1", "red", [ "v0" ] ],
+    [ "dht1:GND", "stm32:GND.1", "black", [ "v0" ] ],
+    [ "rtc1:GND", "stm32:GND.1", "black", [ "v0" ] ],
+    [ "dht1:VCC", "stm32:3V3.1", "red", [ "v0" ] ],
+    [ "btn3:2.l", "stm32:GND.1", "black", [ "h0", "v-115" ] ],
+    [ "btn3:1.r", "stm32:A2", "green", [ "v0" ] ],
+    [ "btn4:2.l", "stm32:GND.1", "black", [ "h0", "v-153.6" ] ],
+    [ "btn4:1.r", "stm32:A3", "green", [ "v-153.6", "h-38.2" ] ],
+    [ "led1:A", "r1:2", "green", [ "v0" ] ],
+    [ "led1:C", "stm32:GND.3", "black", [ "v9.6", "h106" ] ],
+    [ "dht1:SDA", "stm32:A15", "green", [ "v0" ] ],
+    [ "r1:1", "stm32:A12", "green", [ "h0" ] ],
+    [ "bz1:1", "stm32:A8", "green", [ "h-6.9", "v-62.7", "h-124.8", "v57.6" ] ],
+    [ "bz1:2", "stm32:GND.3", "green", [ "h-16.5", "v-43.9", "h-9.6" ] ],
+    [ "led3:A", "r2:1", "green", [ "v0" ] ],
+    [ "r2:2", "stm32:A5", "green", [ "h0", "v66" ] ],
+    [ "led3:C", "stm32:GND.2", "black", [ "v9.6", "h-258.8" ] ]
+  ],
+  "serialMonitor": { "display": "always" },
+  "dependencies": {}
+}
