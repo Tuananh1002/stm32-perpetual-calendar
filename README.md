@@ -101,6 +101,3 @@ source_code/DAMH1/
 
 ---
 
-## 👤 Author
-
-Third-year Telecommunications Engineering student, Ho Chi Minh City University of Technology and Education (HCMUTE).
