@@ -15,23 +15,16 @@ Designed as a university embedded systems capstone project, this solution demons
 ## 🏗️ System Architecture Diagram
 
 <p align="center">
-  <!-- TODO: chèn ảnh sơ đồ khối / kiến trúc hệ thống (RTC - MCU - LCD - Sensor - Buttons) -->
-</p>
+ <img width="773" height="574" alt="image" src="https://github.com/user-attachments/assets/33da4de2-b4f2-48a8-ae92-b3acd485b82d" />
+
 
 ---
 
-## 🔁 Operation Flowchart
+## 🔧 PCB Layout
 
 <p align="center">
-  <!-- TODO: chèn ảnh lưu đồ thuật toán (flowchart) từ báo cáo -->
-</p>
+ <img width="437" height="469" alt="image" src="https://github.com/user-attachments/assets/c42c2f01-bf99-4a17-8cc2-dfdf43e33a57" />
 
----
-
-## 🔧 Hardware Setup
-
-<p align="center">
-  <!-- TODO: chèn ảnh mạch thực tế / breadboard / PCB của board chính -->
 </p>
 
 ---
@@ -39,7 +32,8 @@ Designed as a university embedded systems capstone project, this solution demons
 ## 🖥️ Display in Operation
 
 <p align="center">
-  <!-- TODO: chèn ảnh màn hình LCD lúc hiển thị ngày giờ / chế độ chỉnh alarm -->
+ <img width="415" height="491" alt="image" src="https://github.com/user-attachments/assets/6bb257ee-7ea9-42ec-855f-02dff1b0347d" />
+
 </p>
 
 ---
@@ -49,9 +43,8 @@ Designed as a university embedded systems capstone project, this solution demons
 - ⏰ Real-time clock keeping via DS1307 (I2C), with battery backup across power loss
 - 🌡️ Temperature & humidity monitoring via DHT11, polled every 10 seconds
 - 🔥 Overheat protection — automatic warning screen + buzzer above 45°C
-- 🔔 Configurable alarm — set hour/minute, auto-off after 30 seconds
 - 🎛️ 4-button interface with press-and-hold auto-repeat for fast setting adjustment
-- 📟 20x4 I2C LCD showing date, time, temperature, humidity, and alarm status simultaneously
+- 📟 20x4 I2C LCD showing date, time, temperature, and humidity simultaneously
 
 ---
 
